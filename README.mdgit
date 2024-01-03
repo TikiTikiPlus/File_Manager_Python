@@ -1,0 +1,1 @@
+"# File_Manager_Python"  initgit add README.mdgit commit -m "first commit"git branch -M maingit remote add origin https://github.com/TikiTikiPlus/File_Manager_Python.gitgit push -u origin main

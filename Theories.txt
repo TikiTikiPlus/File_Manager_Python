@@ -1,0 +1,5 @@
+Ok so we will use a local database which we already do. 
+Maybe we can do add tag option.
+and a search function which looks up the tags or the name of the photo. 
+
+make the tabs inside the program
