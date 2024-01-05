@@ -50,7 +50,7 @@ image_viewer_column = [
     [sg.Image(key="-IMAGE-", data=imgdata)],
 
 ]
-layout = [
+tagging_layout = [
     [
         sg.Column(file_list_column),
         sg.VSeperator(),
@@ -60,7 +60,7 @@ layout = [
     ]
 ]
 
-window = sg.Window("Image Viewer", layout)
+window = sg.Window("Image Tagger", tagging_layout)
 db=sqlite3.connect("./image_database.db", uri=True)
 
 cursor=db.cursor()
@@ -101,10 +101,8 @@ while True:
                 values["-FOLDER-"], values["-FILE LIST-"][0]
 
             )
-            
-            
-            window["-TOUT-"].update(filename)
 
+            window["-TOUT-"].update(filename)
             # image = Image.open(filename)
             # imgdata = image.tobytes()
             window["-IMAGE-"].update(filename=filename)
@@ -112,8 +110,6 @@ while True:
             file_chosen=True
             name_of_file=hashlib.md5(open(filename,'rb').read()).hexdigest()
             #if there is none, show none
-
-
 
         except:
 
