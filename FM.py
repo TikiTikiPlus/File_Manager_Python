@@ -61,9 +61,43 @@ tagging_layout = [
 ]
 
 window = sg.Window("Image Tagger", tagging_layout)
-db=sqlite3.connect("./image_database.db", uri=True)
+db=sqlite3.connect("./tags_database.db", uri=True)
+#just check if the table exists or something. 
 
 cursor=db.cursor()
+
+cursor.execute("SELECT name FROM sqlite_master WHERE type='table' and name='images'")
+
+result=cursor.fetchone()
+
+if not result:
+
+    #check if the photo is in the database. 
+    #we can try the md5sum 
+    #check what happens first
+    #print the name of the file
+    
+    #check if file exists in the local database
+
+    create_table_query = '''
+    CREATE TABLE IF NOT EXISTS images (
+        image_name TEXT PRIMARY KEY,
+        tags TEXT,
+        location TEXT
+    );
+    '''
+
+    # Execute the SQL statement to create the table
+    cursor.execute(create_table_query)
+
+    # Commit the changes and close the connection
+    db.commit()
+    # cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+
+    # # Fetch all the table names
+    # tables = cursor.fetchall()
+    # print(tables)
+
 file_chosen=False
 last_clicked_item = None
 current_clicked_item=None
@@ -95,10 +129,10 @@ while True:
     elif event == "-FILE LIST-":  # A file was chosen from the listbox
 
         try:
-
+            full_filename=values["-FILE LIST-"][0]
             filename = os.path.join(
 
-                values["-FOLDER-"], values["-FILE LIST-"][0]
+                values["-FOLDER-"], full_filename
 
             )
 
@@ -115,39 +149,17 @@ while True:
 
             pass
     elif event == 'Tag':
-        #check if the photo is in the database. 
-        #we can try the md5sum 
-        #check what happens first
-        #print the name of the file
-        
-        #check if file exists in the local database
-
-        # create_table_query = '''
-        # CREATE TABLE IF NOT EXISTS images (
-        #     image_name TEXT PRIMARY KEY,
-        #     tags TEXT
-        # );
-        # '''
-
-        # # Execute the SQL statement to create the table
-        # cursor.execute(create_table_query)
-
-        # # Commit the changes and close the connection
-        # db.commit()
-        # cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-
-        # # Fetch all the table names
-        # tables = cursor.fetchall()
-        # print(tables)
+ 
         cursor.execute("SELECT * FROM images WHERE image_name=?",(name_of_file,))
         image_name = cursor.fetchone()
         tag=values['-TAGS-']
+        tag=tag.replace(" ","_")
         if image_name is None:
             print("Image does not exist yet")
             #insert the image name into the database
             tag=[tag]
 
-            cursor.execute("INSERT INTO images (image_name, tags) VALUES (?,?);", (name_of_file,str(tag)))
+            cursor.execute("INSERT INTO images (image_name, tags, location) VALUES (?,?,?);", (name_of_file,str(tag),full_filename))
             db.commit()
         else:
             cursor.execute("SELECT * FROM images WHERE image_name=?;",(name_of_file,))
