@@ -142,6 +142,7 @@ def file_list(window, values):
         #list out the tags of the of the image
         file_chosen=True
         hashed_filename=hashlib.md5(open(filename,'rb').read()).hexdigest()
+        print(hashed_filename)
         #if there is none, show none
         return hashed_filename, filename, file_chosen
     except:
@@ -175,11 +176,11 @@ def tag(db, cursor, name_of_file, filename, values):
 
         # Commit the changes
             db.commit()
-    search_query=f'SELECT location from images WHERE tags LIKE \'%draft%\''
-    cur = db.cursor()
-    cur.execute(search_query)
-    results=cur.fetchall()
-    return results
+    # search_query=f'SELECT location from images WHERE tags LIKE \'%draft%\''
+    # cur = db.cursor()
+    # cur.execute(search_query)
+    # results=cur.fetchall()
+    # return results
         #get the tags into
 
 # elif event=="-TAG LIST-":

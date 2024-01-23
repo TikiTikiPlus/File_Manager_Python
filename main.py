@@ -60,8 +60,9 @@ if not result:
     # # Fetch all the table names
     # tables = cursor.fetchall()
     # print(tables)
+# check all the image locations if the images are located at those positions
 
-
+hashed_filename=""
 while True:
     event, values = window.read()
     # search functions
@@ -74,10 +75,10 @@ while True:
     elif event == "-FILE LIST-":
         hashed_filename, filename, file_chosen = file_list(window=window,values=values)
     elif event == 'Tag':
-        results = tag(db=db, cursor=cursor, name_of_file=hashed_filename, filename=filename, values=values)
+        tag(db=db, cursor=cursor, name_of_file=hashed_filename, filename=filename, values=values)
     elif event == "-TAG LIST-":
         tag_list(cursor=cursor, values=values, db=db, name_of_file=hashed_filename)
-    # if file_chosen:
-    #     tag_check(cursor=cursor,name_of_file=hashed_filename, window=window)
+    if file_chosen:
+        tag_check(cursor=cursor,name_of_file=hashed_filename, window=window)
     if event == "Exit" or event == sg.WIN_CLOSED:
         break
