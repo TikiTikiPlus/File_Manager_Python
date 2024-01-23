@@ -5,8 +5,9 @@ import sqlite3
 # from main import db, window, event, values
 import io
 import tkinter as tk
-imgdata=None
+import os 
 
+imgdata=None
 root = tk.Tk()
 screen_width=root.winfo_screenwidth()
 screen_height=root.winfo_screenheight()
@@ -14,7 +15,6 @@ screen_height=root.winfo_screenheight()
 size=(screen_width/2,screen_height/2)
 
 root.destroy()
-
 
 
 search_column=[

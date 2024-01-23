@@ -9,98 +9,19 @@ import hashlib
 import sqlite3
 from urllib.request import pathname2url
 import ast
-from tag_layout import *
-# from main import window, db, event, values
-
-# imgdata=None
-# file_chosen: bool
-# name_of_file: str
-# tags: list
-# tags=[]
-# First the window layout in 2 columns
-# file_list_column = [
-#     [
-#         sg.Text("Image Folder"),
-#         sg.In(size=(25, 1), enable_events=True, key="-FOLDER-"),
-#         sg.FolderBrowse(),
-#     ],
-#     [
-#         sg.Listbox(
-#             values=[], enable_events=True, size=(40, 20), key="-FILE LIST-"
-#         )
-#     ],
-# ]
-# tags_column = [
-#     [sg.Text("Tag image chosen"),
-#      sg.In(size=(40, 1),
-#     enable_events=True, key="-TAGS-"),
-#     sg.B('Tag')],
-#     [
-#         sg.Listbox(
-#             values=tags, enable_events=True, size=(40,20), key="-TAG LIST-"
-#         )
-#     ]
-# ]
-# image_viewer_column = [
-
-#     [sg.Text("Choose an image from list on left:")],
-
-#     [sg.Text(size=(40, 1), key="-TOUT-")],
-
-#     [sg.Image(key="-IMAGE-", data=imgdata)],
-
-# ]
-# tagging_layout = [
-#     [
-#         sg.Column(file_list_column),
-#         sg.VSeperator(),
-#         sg.Column(tags_column),
-#         sg.VSeperator(),
-#         sg.Column(image_viewer_column),
-#     ]
-# ]
-
-# window = sg.Window("Image Tagger", tagging_layout)
-# db=sqlite3.connect("./tags_database.db", uri=True)
-# #just check if the table exists or something. 
-
-# cursor=db.cursor()
-
-# cursor.execute("SELECT name FROM sqlite_master WHERE type='table' and name='images'")
-
-# result=cursor.fetchone()
-
-# if not result:
-
-#     #check if the photo is in the database. 
-#     #we can try the md5sum 
-#     #check what happens first
-#     #print the name of the file
-    
-#     #check if file exists in the local database
-
-#     create_table_query = '''
-#     CREATE TABLE IF NOT EXISTS images (
-#         image_name TEXT PRIMARY KEY,
-#         tags TEXT,
-#         location TEXT
-#     );
-#     '''
-
-#     # Execute the SQL statement to create the table
-#     cursor.execute(create_table_query)
-
-#     # Commit the changes and close the connection
-#     db.commit()
-#     # cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-
-#     # # Fetch all the table names
-#     # tables = cursor.fetchall()
-#     # print(tables)
 
 file_chosen=False
 last_clicked_item = None
 current_clicked_item=None
+def get_file_list(folder_path):
+    #Gets file of list in the folder
+    try:
+        file_list = os.listdir(folder_path)
+        return file_list
+    except OSError as e:
+        sg.popup_error(f"Error reading folder: {e}")
+        return []
+
 # while True:
 def open_folder(window, values):
 #     event, values = window.read()
@@ -131,9 +52,7 @@ def file_list(window, values):
     try:
         full_filename=values["-FILE LIST-"][0]
         filename = os.path.join(
-
             values["-FOLDER-"], full_filename
-
         )
         window["-TOUT-"].update(filename)
         # image = Image.open(filename)
@@ -146,8 +65,8 @@ def file_list(window, values):
         #if there is none, show none
         return hashed_filename, filename, file_chosen
     except:
-
         pass
+
 # elif event == 'Tag':
 def tag(db, cursor, name_of_file, filename, values):
     cursor.execute("SELECT * FROM images WHERE image_name=?",(name_of_file,))
@@ -176,11 +95,6 @@ def tag(db, cursor, name_of_file, filename, values):
 
         # Commit the changes
             db.commit()
-    # search_query=f'SELECT location from images WHERE tags LIKE \'%draft%\''
-    # cur = db.cursor()
-    # cur.execute(search_query)
-    # results=cur.fetchall()
-    # return results
         #get the tags into
 
 # elif event=="-TAG LIST-":

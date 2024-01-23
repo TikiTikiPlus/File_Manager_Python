@@ -6,6 +6,7 @@ import sqlite3
 import io
 import tkinter as tk
 from search_layout import *
+import os
 
 imgdata=None
 
