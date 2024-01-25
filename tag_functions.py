@@ -9,10 +9,17 @@ import hashlib
 import sqlite3
 from urllib.request import pathname2url
 import ast
+import imghdr
+from search_functions import convert_image_to_bytes
+from file_checks import check_image_with_pil
+import tkinter
+from tkinter import messagebox
+
 
 file_chosen=False
 last_clicked_item = None
 current_clicked_item=None
+
 def get_file_list(folder_path):
     #Gets file of list in the folder
     try:
@@ -28,7 +35,6 @@ def open_folder(window, values):
     # if event == "-FOLDER-":
 
     folder = values["-FOLDER-"]
-
     try:
 
         # Get list of files in folder
@@ -37,33 +43,33 @@ def open_folder(window, values):
     except:
 
         file_list = []
-
-
-    fnames = [
-        f
-        for f in file_list
-        if os.path.isfile(os.path.join(folder, f))
-        and f.lower().endswith((".png", ".gif",".jpg"))
-    ]
-
-    window["-FILE LIST-"].update(fnames)
+    window["-FILE LIST-"].update(file_list)
+    return folder
 # elif event == "-FILE LIST-":  # A file was chosen from the listbox
-def file_list(window, values):
+def file_list(window, folder, filename):
     try:
-        full_filename=values["-FILE LIST-"][0]
-        filename = os.path.join(
-            values["-FOLDER-"], full_filename
+        # partial_filename=values["-FILE LIST-"][0]
+        # print(partial_filename)
+        full_filename = os.path.join(
+            folder,filename
         )
-        window["-TOUT-"].update(filename)
+        window["-TOUT-"].update(full_filename)
         # image = Image.open(filename)
         # imgdata = image.tobytes()
-        window["-IMAGE-"].update(filename=filename)
+        # if imghdr.write(path):
+        if check_image_with_pil(full_filename):
+            pil_image = Image.open(full_filename)
+            img_bytes = convert_image_to_bytes(pil_image)
+            window["-IMAGE-"].update(data=img_bytes)
+        else:
+            window["-IMAGE-"].update(data=None)
+        
         #list out the tags of the of the image
         file_chosen=True
-        hashed_filename=hashlib.md5(open(filename,'rb').read()).hexdigest()
-        print(hashed_filename)
+        hashed_filename=hashlib.md5(open(full_filename,'rb').read()).hexdigest()
         #if there is none, show none
-        return hashed_filename, filename, file_chosen
+        print(file_chosen)
+        return hashed_filename, full_filename, file_chosen
     except:
         pass
 

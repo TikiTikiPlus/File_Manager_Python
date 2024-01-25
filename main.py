@@ -5,10 +5,13 @@ import sqlite3
 from search_functions import *
 from tag_functions import *
 from file_checks import *
+import tkinter as tk
+from file_manager_functions import *
+
 hashed_filename: str
 filename: str
 file_chosen=False
-
+new_destination:str=None
 # Create the TabGroup with tabs
 layout = [
     [sg.TabGroup([
@@ -29,13 +32,6 @@ result=cursor.fetchone()
 
 if not result:
 
-    #check if the photo is in the database. 
-    #we can try the md5sum 
-    #check what happens first
-    #print the name of the file
-    
-    #check if file exists in the local database
-
     create_table_query = '''
     CREATE TABLE IF NOT EXISTS images (
         image_name TEXT PRIMARY KEY,
@@ -50,24 +46,10 @@ if not result:
     # Commit the changes and close the connection
     db.commit()
 
-# check all the image locations if the images are located at those positions
-
-# get all the entry of the database
 cursor.execute("SELECT * FROM images")    
-# entries = cursor.fetchall()
-# for entry in entries:
-#     #check if the file exists in the location we are expecting
-#     hash = entry[0]
-#     location=entry[2]
-#     if os.path.isfile(location):
-#         continue
-#     else:
-#         new_path = find_file_by_hash(hash)
-#         cursor.execute("UPDATE images SET location=? WHERE image_name=?",(new_path,hash))
-
 
 hashed_filename=""
-current_driver="C:/"
+current_path="C:/"
 while True:
 
     event, values = window.read()
@@ -77,23 +59,41 @@ while True:
     elif event =="-IMAGE LIST-":
         search_image_list(window=window, values = values)
     elif event=="-FOLDER-":
-        open_folder(window=window, values=values)
+        current_path=open_folder(window=window, values=values)
     elif event == "-FILE LIST-":
-        path=values["-FILE LIST-"]
-        print(path)
-        full_path=os.path.join(current_driver,path[0])
-        print(full_path)
-        file_type=identify_path(full_path)
-        print(file_type)
-        if file_type=="File":
-        #check if chosen file is folder. if chosen file is folder, then 
-        #proceed and redo the get_file_list thing.
-            hashed_filename, filename, file_chosen = file_list(window=window,values=values)
-        elif file_type=="Folder":
-            #do a separate one. where if the folder is chosen, it would show a new 
-            #set of files
-            window["-FILE LIST-"].update(get_file_list(full_path))
-            current_driver=full_path
+        element=window.find_element_with_focus()       
+        path=values["-FILE LIST-"][0]
+        full_path=os.path.join(current_path,path)
+        if handle_double_click(path):
+            file_type=identify_path(full_path)
+            if file_type=="File":
+            #check if chosen file is folder. if chosen file is folder, then 
+            #proceed and redo the get_file_list thing.
+                hashed_filename, filename, file_chosen=file_list(window=window,folder=current_path, filename=path)
+            elif file_type=="Folder":
+                #do a separate one. where if the folder is chosen, it would show a new 
+                #set of files
+                window["-FILE LIST-"].update(get_file_list(full_path))
+                current_path=full_path
+                window["-FOLDER-"].update(full_path)
+    elif event=='Move':
+        files:str=[]
+        #maybe something like appending the file paths
+        # file_path = values["-FOLDER-"]
+        for i,f in enumerate(values["-FILE LIST-"]):
+            absolute_file=os.path.join(current_path, f)
+            print(absolute_file)
+            files.append(absolute_file)
+        
+        move(files)
+    elif event =='Rename':
+        rename(values)
+    elif event == 'Delete':
+        delete(values)
+    elif event == 'Copy':
+        copy(values)
+    elif event == 'Paste':
+        paste(values, new_destination)
     elif event == 'Tag':
         tag(db=db, cursor=cursor, name_of_file=hashed_filename, filename=filename, values=values)
     elif event == "-TAG LIST-":

@@ -13,6 +13,8 @@ from urllib.request import pathname2url
 import ast
 from tag_functions import *
 
+
+right_click_menu = ['&Right', ['Move', 'Rename','Delete', 'Copy']]
 imgdata=None
 file_chosen: bool
 name_of_file: str
@@ -27,7 +29,7 @@ file_list_column = [
     ],
     [
         sg.Listbox(
-            values=get_file_list('/'), enable_events=True, size=(40, 20), key="-FILE LIST-"
+            values=get_file_list('/'), enable_events=True, size=(40, 20), key="-FILE LIST-",right_click_menu=right_click_menu
         )
     ],
 ]
@@ -43,13 +45,9 @@ tags_column = [
     ]
 ]
 image_viewer_column = [
-
     [sg.Text("Choose an image from list on left:")],
-
     [sg.Text(size=(40, 1), key="-TOUT-")],
-
     [sg.Image(key="-IMAGE-", data=imgdata)],
-
 ]
 tagging_layout = [
     [

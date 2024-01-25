@@ -8,20 +8,15 @@ import tkinter as tk
 import os 
 
 imgdata=None
-root = tk.Tk()
-screen_width=root.winfo_screenwidth()
-screen_height=root.winfo_screenheight()
 
-size=(screen_width/2,screen_height/2)
 
-root.destroy()
-
+right_click_menu = ['&Right', ['Edit', 'Cancel']]
 
 search_column=[
     [sg.Text("Search Images"),
      sg.In(size=(40,1),enable_events=True,key="-SEARCH-"),
      sg.B('Search')],
-    [sg.Listbox(values=["tagged images"],enable_events=True,size=(40,20),key="-IMAGE LIST-")]
+    [sg.Listbox(values=["tagged images"],enable_events=True,size=(40,20),key="-IMAGE LIST-", right_click_menu=right_click_menu)]
 ]
 #do a check every beginning if the pics in the locations do exist
 
@@ -31,7 +26,7 @@ image_column=[
 
     [sg.Text(size=(40, 1), key="-IMAGE OUTPUT-")],
 
-    [sg.Image(key="-IMAGE-", data=imgdata,size=size)],
+    [sg.Image(key="-SEARCHED IMAGE-", data=imgdata)],
 ]
 search_layout = [
     [

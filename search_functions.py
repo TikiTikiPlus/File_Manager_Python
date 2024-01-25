@@ -7,6 +7,7 @@ import io
 import tkinter as tk
 from search_layout import *
 import os
+from file_checks import format
 
 imgdata=None
 
@@ -48,7 +49,7 @@ def search_image_list(window, values):
     filename=values["-IMAGE LIST-"][0][0]
     pil_image=Image.open(filename)
     img_bytes=convert_image_to_bytes(pil_image)
-    window["-IMAGE-"].update(data=img_bytes)
+    window["-SEARCHED IMAGE-"].update(data=img_bytes)
 
     #and then execute the entry.
     #search all tags with all of the same inputs 

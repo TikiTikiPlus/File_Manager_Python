@@ -3,16 +3,40 @@ import os
 import hashlib
 import imghdr
 import filetype
-format = [".jpg",".png",".jpeg"]
+import PIL
+import time
+format = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp']
 # Connect to the database (change the database name and table/column names accordingly)
-def list_files(folder_path):
-    files_and_folder = os.listdir(folder_path)
-    # this lists all the files and folders. and can also differentiate from files and folders
-    # when we do use it. 
-    files = [file for file in files_and_folder if os.path.isfile(os.path.join(folder_path, file))]
-    folders = [folder for folder in files_and_folder if os.path.isdir(os.path.join(os.path.join(folder_path, folder)))]
-    return files, folders
+# def list_files(folder_path):
+#     files_and_folder = os.listdir(folder_path)
+#     # this lists all the files and folders. and can also differentiate from files and folders
+#     # when we do use it. 
+#     files = [file for file in files_and_folder if os.path.isfile(os.path.join(folder_path, file))]
+#     folders = [folder for folder in files_and_folder if os.path.isdir(os.path.join(os.path.join(folder_path, folder)))]
+#     return files, folders
 
+DOUBLE_CLICK_TIME_THRESHOLD=3.0
+last_clicked_time:int=None
+last_clicked_item:str = None
+def handle_double_click(values):
+    global last_clicked_time
+    global last_clicked_item
+
+    current_time=time.time()
+    if last_clicked_time is not None:
+
+        time_difference= current_time - last_clicked_time
+        if time_difference < DOUBLE_CLICK_TIME_THRESHOLD and last_clicked_item == values:
+            return True
+    last_clicked_item=values
+    last_clicked_time = current_time
+    return False
+def check_image_with_pil(path):
+    try:
+        PIL.Image.open(path)
+    except IOError:
+        return False
+    return True
 #check if the path is a folder or file
 def identify_path(path):
     #chekck if path is a file
@@ -42,10 +66,6 @@ def find_file_by_hash(target_hash, search_directory="/"):
                     hashed = calculate_file_hash(file_path=file_path)
                     if hashed == target_hash:
                         abs_path = os.path.abspath(file_path)
-                        # drive_letter = os.path.splitdrive(abs_path)[0]
-                        # print(abs_path)
-                        # print(file_path)
-                        # print("file_found")
                         return abs_path
 
     return None
