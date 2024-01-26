@@ -14,7 +14,7 @@ import ast
 from tag_functions import *
 
 
-right_click_menu = ['&Right', ['Move', 'Rename','Delete', 'Copy']]
+right_click_menu = ['&Right', ['Move', 'Rename','Delete', 'Copy', 'Paste']]
 imgdata=None
 file_chosen: bool
 name_of_file: str

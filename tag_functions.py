@@ -84,8 +84,9 @@ def tag(db, cursor, name_of_file, filename, values):
         print("Image does not exist yet")
         #insert the image name into the database
         tag=[tag]
-
-        cursor.execute("INSERT INTO images (image_name, tags, location) VALUES (?,?,?);", (name_of_file,str(tag),filename))
+        filename=[filename]
+        print(filename)
+        cursor.execute("INSERT INTO images (image_name, tags, location) VALUES (?,?,?);", (name_of_file,str(tag),str(filename).replace("\\\\",'\\')))
         db.commit()
     else:
         cursor.execute("SELECT * FROM images WHERE image_name=?;",(name_of_file,))
@@ -98,7 +99,6 @@ def tag(db, cursor, name_of_file, filename, values):
             array_list.append(tag)
             update_array_query = "UPDATE images SET tags = ? WHERE image_name = ?;"
             cursor.execute(update_array_query, (str(array_list), name_of_file))
-
         # Commit the changes
             db.commit()
         #get the tags into
@@ -132,6 +132,7 @@ def tag_list(cursor, values, db, name_of_file):
 #I want the tag to always be updated no matter what is pressed. therefore i'd have to place the function here. 
 # if file_chosen:
 def tag_check(cursor,name_of_file, window):
+    print(name_of_file)
     cursor.execute("SELECT tags FROM images WHERE image_name=?",(name_of_file,))
     tags = cursor.fetchone()
     #array_text=tags[0]
