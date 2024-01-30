@@ -1,3 +1,4 @@
+import ast
 from email.mime import image
 import PySimpleGUI as sg
 from PIL import Image, ImageTk
@@ -40,13 +41,20 @@ def search(values, db, window):
     cur = db.cursor()
     cur.execute(search_query)
     results=cur.fetchall()
+    all_files=[]
     print(results)
+    for i, f in enumerate(results):
+        files = ast.literal_eval(f[0])
+        for file in files:
+            all_files.append(file)
+
     #for each results, show the location of the stuff. 
-    window["-IMAGE LIST-"].update(results)
+    window["-IMAGE LIST-"].update(all_files)
     # for index, item in enumerate(results):
 def search_image_list(window, values):
 # elif event=="-IMAGE LIST-":
-    filename=values["-IMAGE LIST-"][0][0]
+    filename=values[0]
+    print(filename)
     pil_image=Image.open(filename)
     img_bytes=convert_image_to_bytes(pil_image)
     window["-SEARCHED IMAGE-"].update(data=img_bytes)

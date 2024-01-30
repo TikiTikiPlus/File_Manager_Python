@@ -26,9 +26,10 @@ window = sg.Window('Tabbed Interface', layout)
 db=sqlite3.connect("./tags_database.db", uri=True)
 
 cursor=db.cursor()
-delete_table = "DROP TABLE IF EXISTS images"
-cursor.execute(delete_table)
-db.commit()
+#resetting the table function
+# delete_table = "DROP TABLE IF EXISTS images"
+# cursor.execute(delete_table)
+# db.commit()
 cursor.execute("SELECT name FROM sqlite_master WHERE type='table' and name='images'")
 
 result=cursor.fetchone()
@@ -60,7 +61,8 @@ while True:
     if event == "Search":
         search(values=values, db = db, window=window)
     elif event =="-IMAGE LIST-":
-        search_image_list(window=window, values = values)
+        print(values)
+        search_image_list(window=window, values = values["-IMAGE LIST-"])
     elif event=="-FOLDER-":
         current_path=open_folder(window=window, values=values)
     elif event == "-FILE LIST-":
@@ -171,7 +173,9 @@ while True:
             cursor.execute(update_query,(hashed_filename,))
             result=cursor.fetchone()
             files=ast.literal_eval(result[0])
+            print(files)
             file_location=os.path.join(current_path, os.path.basename(filename))
+            print(file_location)
             # print(os.path.join(current_path, os.path.basename(filename)))
             files.append(file_location)
             print(files)

@@ -12,8 +12,9 @@ class file_manager_functions:
         self.previous_action=None
 
     def move(cls, path, values):
-        cls.copy(path, values)
-        cls.previous_action="copy"
+        if os.path.exists(os.path.join(path,values)):
+            cls.copy(path, values)
+            cls.previous_action="copy"
         # delete(values)
         #move is just copy and delete. so probably just do that. 
 
