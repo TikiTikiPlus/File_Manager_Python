@@ -28,9 +28,9 @@ db=sqlite3.connect("./tags_database.db", uri=True)
 
 cursor=db.cursor()
 #resetting the table function
-# delete_table = "DROP TABLE IF EXISTS images"
-# cursor.execute(delete_table)
-# db.commit()
+delete_table = "DROP TABLE IF EXISTS images"
+cursor.execute(delete_table)
+db.commit()
 cursor.execute("SELECT name FROM sqlite_master WHERE type='table' and name='images'")
 
 result=cursor.fetchone()
