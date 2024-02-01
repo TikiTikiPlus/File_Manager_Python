@@ -25,9 +25,7 @@ def search(values, db, window):
     # anyways, now that we are here, 
     # probably have a set of images?
     input=values["-SEARCH-"]
-    print(values)
     input_array=input.split(" ")
-    print(input_array) 
     tag_query: str
     for index, item in enumerate(input_array):
 
@@ -37,12 +35,11 @@ def search(values, db, window):
             tag_query=f'{tag_query} AND tags LIKE \'%{item}%\''
         # tag_query=f"{tag_query} tags LIKE '%{item}%'"
     search_query=f"SELECT location from images WHERE {tag_query}"
-    print(search_query)
+
     cur = db.cursor()
     cur.execute(search_query)
     results=cur.fetchall()
     all_files=[]
-    print(results)
     for i, f in enumerate(results):
         files = ast.literal_eval(f[0])
         for file in files:
@@ -54,7 +51,6 @@ def search(values, db, window):
 def search_image_list(window, values):
 # elif event=="-IMAGE LIST-":
     filename=values[0]
-    print(filename)
     pil_image=Image.open(filename)
     img_bytes=convert_image_to_bytes(pil_image)
     window["-SEARCHED IMAGE-"].update(data=img_bytes)

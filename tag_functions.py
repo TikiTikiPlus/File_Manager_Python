@@ -68,7 +68,6 @@ def file_list(window, folder, filename):
         file_chosen=True
         hashed_filename=hashlib.md5(open(full_filename,'rb').read()).hexdigest()
         #if there is none, show none
-        print(file_chosen)
         return hashed_filename, full_filename, file_chosen
     except:
         pass
@@ -85,7 +84,6 @@ def tag(db, cursor, name_of_file, filename, values):
         #insert the image name into the database
         tag=[tag]
         filename=[filename]
-        print(filename)
         cursor.execute("INSERT INTO images (image_name, tags, location) VALUES (?,?,?);", (name_of_file,str(tag),str(filename).replace("\\\\",'\\')))
         db.commit()
     else:
@@ -117,7 +115,6 @@ def tag_list(cursor, values, db, name_of_file):
             tags=tags[0][0]
             tags=ast.literal_eval(tags)
             updated_tags = [item for item in tags if current_clicked_item!=item]
-            print(len(updated_tags))
             if len(updated_tags)<1:
                 #remove the entry in the database
                 delete_entry="DELETE from images where image_name=?;"
@@ -132,7 +129,6 @@ def tag_list(cursor, values, db, name_of_file):
 #I want the tag to always be updated no matter what is pressed. therefore i'd have to place the function here. 
 # if file_chosen:
 def tag_check(cursor,name_of_file, window):
-    print(name_of_file)
     cursor.execute("SELECT tags FROM images WHERE image_name=?",(name_of_file,))
     tags = cursor.fetchone()
     #array_text=tags[0]
