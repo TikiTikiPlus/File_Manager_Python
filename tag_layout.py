@@ -29,7 +29,7 @@ file_list_column = [
     ],
     [
         sg.Listbox(
-            values=get_file_list('/'), enable_events=True, size=(40, 20), key="-FILE LIST-",right_click_menu=right_click_menu
+            values=get_file_list('/'), enable_events=True, size=(40, 20), key="-FILE LIST-",right_click_menu=right_click_menu, select_mode='extended'
         )
     ],
 ]

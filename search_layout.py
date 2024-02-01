@@ -10,7 +10,7 @@ import os
 imgdata=None
 
 
-right_click_menu = ['&Right', ['Edit', 'Cancel']]
+# right_click_menu = ['&Right', ['Move', 'Rename', 'Delete']]
 
 search_column=[
     [sg.Text("Search Images"),
@@ -26,7 +26,7 @@ image_column=[
 
     [sg.Text(size=(40, 1), key="-IMAGE OUTPUT-")],
 
-    [sg.Image(key="-SEARCHED IMAGE-", data=imgdata)],
+    [sg.Image(key="-SEARCHED IMAGE-", data=imgdata, size=(300,300))],
 ]
 search_layout = [
     [

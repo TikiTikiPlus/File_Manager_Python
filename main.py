@@ -13,6 +13,7 @@ filename: str
 file_chosen=False
 new_destination:str=None
 f1 = file_manager_functions(files=[])
+current_clicked_item = None
 # Create the TabGroup with tabs
 layout = [
     [sg.TabGroup([
@@ -27,9 +28,9 @@ db=sqlite3.connect("./tags_database.db", uri=True)
 
 cursor=db.cursor()
 #resetting the table function
-delete_table = "DROP TABLE IF EXISTS images"
-cursor.execute(delete_table)
-db.commit()
+# delete_table = "DROP TABLE IF EXISTS images"
+# cursor.execute(delete_table)
+# db.commit()
 cursor.execute("SELECT name FROM sqlite_master WHERE type='table' and name='images'")
 
 result=cursor.fetchone()
@@ -144,8 +145,10 @@ while True:
         tag(db=db, cursor=cursor, name_of_file=hashed_filename, filename=filename, values=values)
         file_chosen=True
     elif event == "-TAG LIST-":
-        tag_list(cursor=cursor, values=values, db=db, name_of_file=hashed_filename) 
-        # window["-TAG LIST-"].update
+        if handle_double_click(values['-TAG LIST-']):
+            tag_list(cursor=cursor, values=values['-TAG LIST-'][0], db=db, name_of_file=hashed_filename) 
+
+        window["-TAG LIST-"].update
     if file_chosen:
         tag_check(cursor=cursor,name_of_file=hashed_filename, window=window)
         file_chosen = False
